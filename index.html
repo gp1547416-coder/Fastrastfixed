@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastTrast | Velocity in Motion</title>
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg: #050505;
+            --text: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow: hidden; /* Keeps the "app" feel */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Animated Background --- */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #050505 100%);
+            z-index: -2;
+        }
+
+        .floating-blobs {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: blur(80px);
+            animation: rotate 20s linear infinite;
+        }
+
+        .blob {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: move 10s ease-in-out infinite alternate;
+        }
+
+        .blob.purple {
+            background: var(--secondary);
+            right: 10%;
+            bottom: 10%;
+            animation-delay: -5s;
+        }
+
+        /* --- Main Container --- */
+        .container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* --- Animated Logo --- */
+        .logo-box {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(90deg, #fff, var(--primary), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-top: -10px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            animation: fadeInOut 3s ease-in-out infinite;
+        }
+
+        /* --- Animated Button --- */
+        .btn {
+            margin-top: 3rem;
+            padding: 15px 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            background: transparent;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 20px var(--primary);
+            transform: scale(1.05);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* --- Keyframes --- */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(10%, 10%); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Cursor Follower */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transition: transform 0.1s ease;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cursor"></div>
+
+    <div class="bg-gradient"></div>
+    <div class="floating-blobs">
+        <div class="blob"></div>
+        <div class="blob purple"></div>
+    </div>
+
+    <div class="container">
+        <div class="logo-box">
+            <h1 id="title">FASTTRAST</h1>
+            <p class="tagline">Speed. Precision. Future.</p>
+        </div>
+        <br>
+        <button class="btn" onclick="blastOff()">Initialize</button>
+    </div>
+
+    <script>
+        // Smooth Cursor Follower
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+        });
+
+        // Interactive "Blast Off" function
+        function blastOff() {
+            const title = document.getElementById('title');
+            title.style.transition = "0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)";
+            title.style.transform = "scale(1.5) rotate(5deg)";
+            
+            const btn = document.querySelector('.btn');
+            btn.innerText = "ACCELERATING...";
+            
+            setTimeout(() => {
+                title.style.transform = "scale(1) rotate(0deg)";
+                btn.innerText = "INITIALIZE";
+            }, 1000);
+        }
+
+        // Add subtle movement to the logo based on mouse position
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.clientX) / 25;
+            const y = (window.innerHeight / 2 - e.clientY) / 25;
+            document.querySelector('.logo-box').style.transform = `translate(${x}px, ${y}px)`;
+        });
+    </script>
+</body>
+</html>
