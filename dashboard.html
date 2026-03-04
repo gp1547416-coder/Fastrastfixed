@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastTrast | Command Center</title>
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --accent: #7000ff;
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- Dashboard Layout --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--glass);
+            margin-bottom: 30px;
+        }
+
+        .user-greet h1 { font-size: 1.5rem; color: var(--primary); }
+        #live-clock { font-family: monospace; opacity: 0.7; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        /* --- Functional Cards --- */
+        .card {
+            background: var(--glass);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .card:active { transform: scale(0.95); background: rgba(0, 242, 255, 0.1); }
+
+        .card h3 { font-size: 0.8rem; text-transform: uppercase; opacity: 0.6; margin-bottom: 10px; }
+        .card .value { font-size: 1.8rem; font-weight: bold; color: var(--primary); }
+
+        /* --- Action Center --- */
+        .actions {
+            margin-top: 30px;
+            background: linear-gradient(145deg, var(--accent), #4a00aa);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="user-greet">
+            <h1 id="greeting">Welcome, Operator</h1>
+            <p id="live-clock">00:00:00</p>
+        </div>
+        <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%;"></div>
+    </div>
+
+    <div class="grid">
+        <div class="card" onclick="updateStat(this)">
+            <h3>Nodes Active</h3>
+            <div class="value" id="node-val">12</div>
+        </div>
+        <div class="card" onclick="updateStat(this)">
+            <h3>Uptime</h3>
+            <div class="value">99.9%</div>
+        </div>
+        <div class="card" onclick="location.reload()">
+            <h3>Latency</h3>
+            <div class="value">14ms</div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <div class="status-pill">SYSTEM OPTIMIZED</div>
+        <h2>Ready for Deployment</h2>
+        <p style="opacity: 0.8; font-size: 0.9rem; margin: 10px 0 20px;">FastTrast protocols are fully initialized.</p>
+        <button onclick="toggleSystem()" id="sys-btn" style="padding: 10px 30px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer;">DEACTIVATE</button>
+    </div>
+
+    <script>
+        // 1. Functional Live Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-clock').innerText = now.toLocaleTimeString();
+            
+            // 2. Dynamic Greeting
+            const hour = now.getHours();
+            const greet = document.getElementById('greeting');
+            if(hour < 12) greet.innerText = "Good Morning, Operator";
+            else if(hour < 18) greet.innerText = "Good Afternoon, Operator";
+            else greet.innerText = "Good Evening, Operator";
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 3. Interactive Stat Updates
+        function updateStat(card) {
+            const valElement = card.querySelector('.value');
+            if(valElement.id === 'node-val') {
+                let current = parseInt(valElement.innerText);
+                valElement.innerText = current + 1;
+            }
+            card.style.borderColor = "var(--primary)";
+            setTimeout(() => card.style.borderColor = "rgba(255,255,255,0.1)", 500);
+        }
+
+        // 4. Functional Toggle Switch
+        let isActive = true;
+        function toggleSystem() {
+            isActive = !isActive;
+            const btn = document.getElementById('sys-btn');
+            const pill = document.querySelector('.status-pill');
+            
+            if(isActive) {
+                btn.innerText = "DEACTIVATE";
+                btn.style.background = "white";
+                pill.innerText = "SYSTEM OPTIMIZED";
+                pill.style.color = "#00ff00";
+            } else {
+                btn.innerText = "ACTIVATE";
+                btn.style.background = "var(--primary)";
+                pill.innerText = "SYSTEM STANDBY";
+                pill.style.color = "#ff4b2b";
+            }
+        }
+    </script>
+</body>
+</html>
